@@ -40,10 +40,11 @@ app = FastAPI()
 @app.post("/shortest-path")
 def find_shortest_path(locations: Locations):
     # 입력 확인.
-    print("start_location")
-    print(locations.start_location)
-    print("item_locations")
-    print(locations.item_locations)
+    print("start_location:", locations.start_location)
+    # - 예시
+    # - start_location: 0
+    print("item_locations:", locations.item_locations)
+    # - item_locations: [1, 7, 9]
 
     # 시작 정점과 끝 정점을 추가해서 TSP를 적용할 list 만들기.
     visit_list = deepcopy(locations.item_locations)
@@ -52,6 +53,7 @@ def find_shortest_path(locations: Locations):
     visit_list.insert(0,start_location)
     # 끝 정점(계산대) 추가하기. 73번 정점이 계산대.
     visit_list.append(73)
+    # - visit_list: [0, 1, 7, 9, 73]
 
     # TSP 알고리즘을 적용하기 위해, 방문하는 위치들만으로 부분 그래프(sub graph) 만들기.
     # 부분 그래프 만들기.
@@ -60,6 +62,12 @@ def find_shortest_path(locations: Locations):
     for r in range(l):
         for c in range(l):
             sub_graph[r][c] = SHORTEST_DISTANCES[visit_list[r]][visit_list[c]]
+    # - sub_graph:
+    # 0.00 13.4 11.4 10.3 5.63
+    # 13.4 0.00 4.13 4.17 11.6
+    # 11.4 4.13 0.00 2.11 9.65
+    # 10.3 4.17 2.11 0.00 8.51
+    # 5.63 11.6 9.65 8.51 0.00
 
     # 최단거리, 최단경로 초기화.
     shortest_distance = -1
@@ -82,6 +90,10 @@ def find_shortest_path(locations: Locations):
 
         temp_path,shortest_distance = local_search_2_opt(sub_graph_np_array,seed,-1,True)
 
+    # - temp_path: [0, 3, 2, 1, 4]
+    # temp_path의 요소는 visit_list의 index를 의미.
+    # 즉, 방문순서는 0 -> 9 -> 7 -> 1 -> 73
+
     # 실제 경로로 변환해주기.
     real_path = [start_location]
     temp_path_len = len(temp_path)
@@ -89,12 +101,14 @@ def find_shortest_path(locations: Locations):
         real_path.extend(SHORTEST_PATHS[visit_list[temp_path[i]]][visit_list[temp_path[i+1]]][1:])
 
     # 최단 경로 출력
-    print("real_path")
-    print(real_path)
+    print("real_path", real_path)
+    # - real_path: [0, 71, 70, 69, 68, 58, 55, 52, 48, 45, 
+    # 9, 45, 42, 39, 7, 39, 42, 41, 35, 1, 35, 41, 
+    # 47, 51, 57, 63, 64, 65, 66, 67, 68, 69, 70, 73]
 
     # 최단 거리 출력
-    print("shortest_distance")
-    print(str(shortest_distance) + "m")
+    print("shortest_distance", (str(shortest_distance) + "m"))
+    # - shortest_distance: 28.20m
 
     return {"path":real_path}
 
