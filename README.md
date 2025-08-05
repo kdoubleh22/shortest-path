@@ -1,4 +1,5 @@
 # 마트 장보기 최단경로 API
+본 레포지토리는 삼성청년SW아카데미 자율 프로젝트 결선발표회 입상한 [mmARt 프로젝트](https://catnip-beryl-256.notion.site/mmARt-1af0e491f4b1479e92ec2687ef830c0d?source=copy_link)(AR을 활용하여 마트 최단경로 장보기를 돕는 앱)에서 담당한 역할(마트 장보기 최단경로 알고리즘 API 개발)을 정리한 코드입니다.
 
 ## 📌 목차  
 0. 요약
